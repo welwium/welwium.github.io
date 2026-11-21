@@ -12,11 +12,11 @@ export type Product = {
 };
 
 export const imageUrls = {
-  hero: "/manus-storage/async-images/GLKUxElhwqsBJhLZMiFJX1/image-1.webp",
-  aura: "/manus-storage/async-images/GLKUxElhwqsBJhLZMiFJX1/image-2.webp",
-  orbit: "/manus-storage/async-images/GLKUxElhwqsBJhLZMiFJX1/image-3.webp",
-  veil: "/manus-storage/async-images/GLKUxElhwqsBJhLZMiFJX1/image-4.webp",
-  node: "/manus-storage/async-images/GLKUxElhwqsBJhLZMiFJX1/image-5.webp",
+  hero: "/assets/welwium-hero.webp",
+  aura: "/assets/welwium-aura.webp",
+  orbit: "/assets/welwium-orbit.webp",
+  veil: "/assets/welwium-veil.webp",
+  node: "/assets/welwium-node.webp",
 };
 
 export const products: Product[] = [
