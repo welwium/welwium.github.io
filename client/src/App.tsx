@@ -36,7 +36,7 @@ function Nav() {
   const [open, setOpen] = useState(false);
   const [location] = useLocation();
   const links = [["/products", "Products"], ["/about", "About"], ["/contact", "Contact"]];
-  return <header className="site-nav"><Mark /><nav className={`nav-links ${open ? "open" : ""}`}>{links.map(([href, label]) => <Link key={href} href={href} className={location === href ? "active" : ""} onClick={() => setOpen(false)}>{label}</Link>)}<span className="nav-line" /><Link href="/admin" onClick={() => setOpen(false)} className="nav-admin">Admin <LockKeyhole size={12} /></Link></nav><button className="menu-button" onClick={() => setOpen(!open)} aria-label="Open menu">{open ? <X size={20} /> : <Menu size={20} />}</button></header>;
+  return <header className="site-nav"><Mark /><nav className={`nav-links ${open ? "open" : ""}`}>{links.map(([href, label]) => <Link key={href} href={href} className={location === href ? "active" : ""} onClick={() => setOpen(false)}>{label}</Link>)}</nav><button className="menu-button" onClick={() => setOpen(!open)} aria-label="Open menu">{open ? <X size={20} /> : <Menu size={20} />}</button></header>;
 }
 
 function Footer() { return <footer className="footer"><div><Mark /><p>Intelligent technology, refined.<br />Designed in Pakistan. Made for what’s next.</p></div><div className="footer-links"><Link href="/products">Products</Link><Link href="/about">About us</Link><Link href="/contact">Contact</Link></div><div className="footer-bottom"><span>© 2026 WELWIUM</span><span>Onyx · Champagne · Dawn</span><span className="socials"><Instagram size={15} /> @welwium</span></div></footer>; }
