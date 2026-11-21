@@ -1,42 +1,72 @@
-import { Toaster } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import NotFound from "@/pages/NotFound";
-import { Route, Switch } from "wouter";
-import ErrorBoundary from "./components/ErrorBoundary";
-import { ThemeProvider } from "./contexts/ThemeContext";
-import Home from "./pages/Home";
+import { useEffect, useMemo, useState } from "react";
+import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
+import { ArrowUpRight, ChevronLeft, ChevronRight, Instagram, LockKeyhole, Menu, Minus, Plus, Send, X } from "lucide-react";
+import { Link, Route, Switch, useLocation, useRoute } from "wouter";
+import { imageUrls, products, siteSettings, type Product } from "./data";
 
-function Router() {
-  // make sure to consider if you need authentication for certain routes
-  return (
-    <Switch>
-      <Route path={"/"} component={Home} />
-      <Route path={"/404"} component={NotFound} />
-      {/* Final fallback route */}
-      <Route component={NotFound} />
-    </Switch>
-  );
+const ease = [0.22, 1, 0.36, 1] as const;
+
+function Meta({ title, description, type = "website", product }: { title: string; description: string; type?: string; product?: Product }) {
+  useEffect(() => {
+    document.title = title;
+    const set = (name: string, content: string) => {
+      let el = document.querySelector(`meta[name="${name}"]`) as HTMLMetaElement | null;
+      if (!el) { el = document.createElement("meta"); el.name = name; document.head.appendChild(el); }
+      el.content = content;
+    };
+    set("description", description);
+    set("keywords", "premium technology Pakistan, intelligent devices, WELWIUM, refined technology");
+    set("og:title", title); set("og:description", description); set("og:type", type); set("og:image", imageUrls.hero); set("twitter:card", "summary_large_image");
+    const schema = product ? { "@context": "https://schema.org", "@type": "Product", name: product.name, description: product.detail, image: product.image, brand: { "@type": "Brand", name: "WELWIUM" }, offers: { "@type": "Offer", priceCurrency: "PKR", price: product.price.replace(/[^0-9]/g, ""), availability: "https://schema.org/PreOrder" } } : { "@context": "https://schema.org", "@type": "Organization", name: "WELWIUM", description, areaServed: "Pakistan", url: window.location.origin };
+    let script = document.getElementById("welwium-schema") as HTMLScriptElement | null;
+    if (!script) { script = document.createElement("script"); script.id = "welwium-schema"; script.type = "application/ld+json"; document.head.appendChild(script); }
+    script.textContent = JSON.stringify(schema);
+  }, [title, description, type, product]);
+  return null;
 }
 
-// NOTE: About Theme
-// - First choose a default theme according to your design style (dark or light bg), than change color palette in index.css
-//   to keep consistent foreground/background color across components
-// - If you want to make theme switchable, pass `switchable` ThemeProvider and use `useTheme` hook
+function Mark() { return <Link href="/"><span className="wordmark"><span className="wordmark-mark" />WELWIUM</span></Link>; }
 
-function App() {
-  return (
-    <ErrorBoundary>
-      <ThemeProvider
-        defaultTheme="light"
-        // switchable
-      >
-        <TooltipProvider>
-          <Toaster />
-          <Router />
-        </TooltipProvider>
-      </ThemeProvider>
-    </ErrorBoundary>
-  );
+function GlassButton({ children, href, onClick, secondary = false }: { children: React.ReactNode; href?: string; onClick?: () => void; secondary?: boolean }) {
+  const cls = `glass-button ${secondary ? "glass-button-secondary" : ""}`;
+  return href ? <Link href={href} className={cls}>{children}<ArrowUpRight size={15} /></Link> : <button className={cls} onClick={onClick}>{children}<ArrowUpRight size={15} /></button>;
 }
 
-export default App;
+function Nav() {
+  const [open, setOpen] = useState(false);
+  const [location] = useLocation();
+  const links = [["/products", "Products"], ["/about", "About"], ["/contact", "Contact"]];
+  return <header className="site-nav"><Mark /><nav className={`nav-links ${open ? "open" : ""}`}>{links.map(([href, label]) => <Link key={href} href={href} className={location === href ? "active" : ""} onClick={() => setOpen(false)}>{label}</Link>)}<span className="nav-line" /><Link href="/admin" onClick={() => setOpen(false)} className="nav-admin">Admin <LockKeyhole size={12} /></Link></nav><button className="menu-button" onClick={() => setOpen(!open)} aria-label="Open menu">{open ? <X size={20} /> : <Menu size={20} />}</button></header>;
+}
+
+function Footer() { return <footer className="footer"><div><Mark /><p>Intelligent technology, refined.<br />Designed in Pakistan. Made for what’s next.</p></div><div className="footer-links"><Link href="/products">Products</Link><Link href="/about">About us</Link><Link href="/contact">Contact</Link></div><div className="footer-bottom"><span>© 2026 WELWIUM</span><span>Onyx · Champagne · Dawn</span><span className="socials"><Instagram size={15} /> @welwium</span></div></footer>; }
+
+function Reveal({ children, className = "" }: { children: React.ReactNode; className?: string }) { return <motion.div className={className} initial={{ opacity: 0, y: 28 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: .7, ease }}>{children}</motion.div>; }
+
+function Home() {
+  const { scrollYProgress } = useScroll();
+  const heroY = useTransform(scrollYProgress, [0, .26], [0, 120]);
+  return <div><Meta title="WELWIUM — Intelligent Technology, Refined" description="WELWIUM creates premium intelligent technology for a more considered life, designed in Pakistan." /><Nav /><main>
+    <section className="hero"><motion.img style={{ y: heroY }} src={imageUrls.hero} alt="WELWIUM sculptural technology in an onyx interior" /><div className="hero-overlay" /><div className="hero-content"><span className="kaglis eyebrow">A new signal from Pakistan</span><h1>Technology,<br /><em>refined.</em></h1><p>Objects for the moments that matter.<br />Quietly intelligent. Beautifully considered.</p><GlassButton href="/products">Explore the system</GlassButton></div><div className="hero-scroll"><span>Scroll to discover</span><span className="scroll-line" /></div></section>
+    <section className="intro section-shell"><Reveal><span className="kaglis eyebrow">01 / The philosophy</span><h2>Less noise.<br /><em>More signal.</em></h2></Reveal><Reveal className="intro-copy"><p>WELWIUM is a premium technology house from Pakistan, building the things that sit quietly at the centre of a life well lived.</p><GlassButton href="/about" secondary>Our point of view</GlassButton></Reveal></section>
+    <section className="feature-stage"><div className="feature-image"><img src={imageUrls.aura} alt="WELWIUM AURA product concept" /></div><div className="feature-card glass-panel"><span className="kaglis eyebrow">The first collection</span><h2>Objects with<br /><em>intention.</em></h2><p>We design the future in tactile materials, soft light, and calm interfaces.</p><Link href="/products" className="text-link">View the collection <ArrowUpRight size={15} /></Link></div></section>
+    <section className="manifesto section-shell"><Reveal><span className="kaglis eyebrow">02 / A better relationship</span><h2>Made to recede<br />into your <em>life.</em></h2></Reveal><div className="manifesto-grid"><Reveal><span className="manifesto-number">01</span><h3>Material first</h3><p>Technology should invite touch. We begin with how a thing feels before deciding what it does.</p></Reveal><Reveal><span className="manifesto-number">02</span><h3>Quietly capable</h3><p>The best interface is often the one that knows when to get out of your way.</p></Reveal><Reveal><span className="manifesto-number">03</span><h3>Rooted here</h3><p>From Pakistan to everywhere, our perspective is local, warm, and entirely forward.</p></Reveal></div></section>
+    <section className="home-cta"><div className="cta-inner"><span className="kaglis eyebrow">Begin with the essential</span><h2>Find your next<br /><em>essential.</em></h2><GlassButton href="/products">View products</GlassButton></div></section>
+  </main><Footer /></div>;
+}
+
+function ProductCard({ product, index }: { product: Product; index: number }) { return <motion.article className="product-card" initial={{ opacity: 0, y: 26 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: .6, delay: index * .06, ease }} whileHover={{ y: -10, scale: 1.015 }}><Link href={`/products/${product.slug}`}><div className="card-image"><img src={product.image} alt={product.name} /><span className="card-shine" /></div><div className="card-body"><div><span className="kaglis card-eyebrow">{product.category}</span><h3>{product.name}</h3></div><p>{product.description}</p><span className="card-link">Check it out <ArrowUpRight size={14} /></span></div></Link></motion.article>; }
+
+function Products() { return <div><Meta title="Products — WELWIUM" description="Explore WELWIUM's placeholder collection of intelligent objects, designed with restraint and purpose." /><Nav /><main className="catalogue"><section className="page-hero section-shell"><span className="kaglis eyebrow">The collection / 2026</span><h1>Objects with<br /><em>intention.</em></h1><p>Five starting points for a more considered relationship with technology. The collection will evolve as we do.</p></section><section className="product-grid section-shell">{products.map((product, i) => <ProductCard product={product} index={i} key={product.slug} />)}</section></main><Footer /></div>; }
+
+function ProductDetail() { const [, params] = useRoute("/products/:slug"); const product = products.find(p => p.slug === params?.slug); const [active, setActive] = useState(0); if (!product) return <NotFound />; const slides = [product.image, imageUrls.hero, product.image]; return <div><Meta title={`${product.name} — WELWIUM`} description={product.detail} type="product" product={product} /><Nav /><main className="detail-page"><div className="detail-breadcrumb"><Link href="/products">Products</Link><span>/</span><span>{product.name}</span></div><section className="detail-grid"><div className="detail-gallery"><div className="gallery-main"><AnimatePresence mode="wait"><motion.img key={active} src={slides[active]} alt={product.name} initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -16 }} transition={{ duration: .35 }} /></AnimatePresence><button className="gallery-arrow left" onClick={() => setActive((active + slides.length - 1) % slides.length)}><ChevronLeft /></button><button className="gallery-arrow right" onClick={() => setActive((active + 1) % slides.length)}><ChevronRight /></button></div><div className="gallery-thumbs">{slides.map((src, i) => <button className={active === i ? "selected" : ""} onClick={() => setActive(i)} key={`${src}-${i}`}><img src={src} alt="" /></button>)}</div></div><div className="detail-copy"><span className="kaglis eyebrow">{product.eyebrow}</span><h1>{product.name}</h1><p className="detail-lead">{product.description}</p><p>{product.detail}</p><div className="detail-price"><span>Indicative price</span><strong>{product.price}</strong></div><GlassButton onClick={() => alert("WELWIUM checkout will be connected once the collection is finalized.")}>Reserve yours</GlassButton><div className="specs">{product.specs.map(spec => <span key={spec}>{spec}</span>)}</div></div></section><section className="related section-shell"><span className="kaglis eyebrow">Keep exploring</span><h2>Other <em>essentials.</em></h2><div className="related-row">{products.filter(p => p.slug !== product.slug).slice(0, 3).map((p, i) => <ProductCard product={p} index={i} key={p.slug} />)}</div></section></main><Footer /></div>; }
+
+function About() { return <div><Meta title="About WELWIUM — A More Considered Future" description="WELWIUM is a premium technology house from Pakistan building intelligent objects with intention." /><Nav /><main className="about-page"><section className="about-hero section-shell"><span className="kaglis eyebrow">About WELWIUM</span><h1>A future that<br /><em>feels human.</em></h1><p>We are a technology house from Pakistan, creating the objects and systems that make modern life feel a little more considered.</p></section><section className="story-stacked section-shell"><Reveal className="story-card story-dark"><div><span className="story-num">01</span><span className="kaglis eyebrow">Where we begin</span><h2>Born from a<br /><em>different pace.</em></h2><p>WELWIUM started with a simple belief: the future does not have to shout. From our studio in Pakistan, we build with patience, warmth, and an eye for the detail that makes something last.</p></div><img src={imageUrls.node} alt="WELWIUM studio object" /></Reveal><Reveal className="story-card story-light"><img src={imageUrls.veil} alt="WELWIUM portable technology concept" /><div><span className="story-num">02</span><span className="kaglis eyebrow">How we think</span><h2>Useful can<br /><em>still be beautiful.</em></h2><p>We pair careful engineering with tactile materials and calm interfaces. Every decision is an invitation to spend less time managing technology and more time living with it.</p></div></Reveal></section><section className="about-quote"><div className="section-shell"><span className="kaglis eyebrow">03 / Our north star</span><blockquote>“Make the everyday feel like it was made for you.”</blockquote><span className="quote-mark">W.</span></div></section></main><Footer /></div>; }
+
+function Contact() { const [form, setForm] = useState({ name: "", email: "", message: "", interest: "" }); const [sent, setSent] = useState(false); const update = (key: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => setForm({ ...form, [key]: e.target.value }); const submit = (e: React.FormEvent) => { e.preventDefault(); const text = `Hello WELWIUM,\n\nName: ${form.name}\nEmail: ${form.email}\nInterest: ${form.interest}\nMessage: ${form.message}`; window.open(`https://wa.me/${siteSettings.whatsappNumber}?text=${encodeURIComponent(text)}`, "_blank"); setSent(true); }; return <div><Meta title="Contact WELWIUM — Start a Conversation" description="Connect with WELWIUM in Pakistan. Share what you are looking for and start a conversation on WhatsApp." /><Nav /><main className="contact-page section-shell"><section className="contact-intro"><span className="kaglis eyebrow">Open channel</span><h1>Let’s make<br /><em>something matter.</em></h1><p>Whether you are looking for a first essential, a partnership, or simply want to know what comes next, we would love to hear from you.</p><div className="contact-note"><span>Based in</span><strong>Lahore, Pakistan</strong><span>Available</span><strong>Mon — Fri / 10:00 — 18:00 PKT</strong></div></section><form className="contact-form glass-panel" onSubmit={submit}><label>Your name<input required value={form.name} onChange={update("name")} placeholder="Ayesha Khan" /></label><label>Email address<input required type="email" value={form.email} onChange={update("email")} placeholder="you@example.com" /></label><label>I'm interested in<select required value={form.interest} onChange={update("interest")}><option value="">Select one</option><option>Exploring the collection</option><option>Partnerships</option><option>Press & media</option><option>Something else</option></select></label><label>Message<textarea required value={form.message} onChange={update("message")} placeholder="Tell us a little about what you have in mind..." rows={5} /></label><button className="glass-button" type="submit">Send via WhatsApp <Send size={15} /></button>{sent && <p className="form-success">Your message draft is ready in WhatsApp.</p>}</form></main><Footer /></div>; }
+
+function Admin() { const [unlocked, setUnlocked] = useState(false); const [password, setPassword] = useState(""); const [items, setItems] = useState(products); const [activeTab, setActiveTab] = useState("Products"); if (!unlocked) return <div className="admin-gate"><Meta title="Admin — WELWIUM" description="Private WELWIUM admin portal." /><div className="gate-card glass-panel"><span className="wordmark"><span className="wordmark-mark" />WELWIUM</span><LockKeyhole size={24} /><span className="kaglis eyebrow">Private studio</span><h1>Content, <em>considered.</em></h1><p>Enter the studio password to manage the WELWIUM experience.</p><form onSubmit={e => { e.preventDefault(); if (password === siteSettings.adminPassword) setUnlocked(true); else alert("Demo password: welwium-demo"); }}><input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Studio password" /><button className="glass-button">Unlock <ArrowUpRight size={15} /></button></form><Link href="/" className="text-link">Return to site</Link></div></div>; return <div className="admin-page"><Nav /><main className="admin-shell section-shell"><div className="admin-top"><div><span className="kaglis eyebrow">WELWIUM / Studio</span><h1>Good morning.</h1><p>Shape the next version of the brand.</p></div><GlassButton href="/">View live site</GlassButton></div><div className="admin-layout"><aside className="admin-sidebar">{["Products", "Homepage media", "Site settings"].map(tab => <button className={activeTab === tab ? "selected" : ""} onClick={() => setActiveTab(tab)} key={tab}>{tab}<ArrowUpRight size={14} /></button>)}</aside><section className="admin-content">{activeTab === "Products" && <><div className="admin-heading"><div><span className="kaglis eyebrow">Catalogue</span><h2>Products <span>{items.length}</span></h2></div><button className="small-button" onClick={() => setItems([...items, { ...products[0], slug: `new-${items.length + 1}`, name: `NEW / 0${items.length + 1}` }])}><Plus size={14} /> Add product</button></div>{items.map(item => <div className="admin-row" key={item.slug}><img src={item.image} alt="" /><div><strong>{item.name}</strong><span>{item.category}</span></div><div className="admin-actions"><button title="Remove product" onClick={() => setItems(items.filter(candidate => candidate.slug !== item.slug))}><Minus size={14} /></button><button title="Edit product" onClick={() => { const nextName = window.prompt("Product name", item.name); if (nextName) setItems(items.map(candidate => candidate.slug === item.slug ? { ...candidate, name: nextName } : candidate)); }}><ArrowUpRight size={14} /></button></div></div>)}</>}{activeTab === "Homepage media" && <div className="admin-heading"><div><span className="kaglis eyebrow">Visual direction</span><h2>Homepage media</h2></div><div className="media-control"><img src={imageUrls.hero} alt="Homepage hero" /><div><strong>Current hero image</strong><span>Replace with a new image from the WELWIUM library.</span><button className="small-button">Choose image</button></div></div></div>}{activeTab === "Site settings" && <div className="admin-heading"><div><span className="kaglis eyebrow">Configuration</span><h2>Site settings</h2></div><div className="settings-card"><label>WhatsApp number<input defaultValue={siteSettings.whatsappNumber} /></label><label>Homepage announcement<input defaultValue="The first collection is coming soon." /></label><button className="glass-button">Save settings</button></div></div>}</section></div></main></div>; }
+
+function NotFound() { return <div className="admin-gate"><div className="gate-card glass-panel"><span className="kaglis eyebrow">404 / off signal</span><h1>Nothing here<br /><em>yet.</em></h1><p>The page you are looking for has not joined the collection.</p><GlassButton href="/">Return home</GlassButton></div></div>; }
+
+export default function App() { return <Switch><Route path="/" component={Home} /><Route path="/products" component={Products} /><Route path="/products/:slug" component={ProductDetail} /><Route path="/about" component={About} /><Route path="/contact" component={Contact} /><Route path="/admin" component={Admin} /><Route component={NotFound} /></Switch>; }
