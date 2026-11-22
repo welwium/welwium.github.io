@@ -29,9 +29,22 @@ create table if not exists public.site_settings (
   id boolean primary key default true check (id = true),
   whatsapp_number text not null default '923001234567',
   hero_image_url text not null default '',
+  hero_eyebrow text not null default 'A new signal from Pakistan',
+  hero_heading text not null default 'Technology,|refined.',
+  hero_subheading text not null default 'Objects for the moments that matter.\nQuietly intelligent. Beautifully considered.',
+  philosophy_heading text not null default 'Less noise.|More signal.',
+  philosophy_body text not null default 'WELWIUM is a premium technology house from Pakistan, building the things that sit quietly at the centre of a life well lived.',
+  cta_heading text not null default 'Find your next|essential.',
   announcement text not null default 'The first collection is coming soon.',
   updated_at timestamptz not null default now()
 );
+
+alter table public.site_settings add column if not exists hero_eyebrow text not null default 'A new signal from Pakistan';
+alter table public.site_settings add column if not exists hero_heading text not null default 'Technology,|refined.';
+alter table public.site_settings add column if not exists hero_subheading text not null default 'Objects for the moments that matter.\nQuietly intelligent. Beautifully considered.';
+alter table public.site_settings add column if not exists philosophy_heading text not null default 'Less noise.|More signal.';
+alter table public.site_settings add column if not exists philosophy_body text not null default 'WELWIUM is a premium technology house from Pakistan, building the things that sit quietly at the centre of a life well lived.';
+alter table public.site_settings add column if not exists cta_heading text not null default 'Find your next|essential.';
 
 insert into public.site_settings (id) values (true) on conflict (id) do nothing;
 

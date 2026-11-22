@@ -138,3 +138,26 @@ p { color:var(--muted); max-width:34rem; }
 .form-error { width:100%; color:#efb4a9; font-size:12px; margin:10px 0 5px; }
 .admin-top-actions { display:flex; align-items:center; gap:12px; }
 @media (max-width:800px) { .admin-top-actions { flex-wrap:wrap; margin-top:24px; } }
+
+/* Modern motion pass: composed stillness, deliberate scroll, and tactile controls */
+:root { --ease-premium:cubic-bezier(.22,1,.36,1); }
+.button-magnetic-content { display:inline-flex; align-items:center; gap:20px; }
+.fold-text { display:inline-flex; flex-direction:column; align-items:flex-start; overflow:visible; }
+.fold-line { display:block; overflow:hidden; clip-path:inset(0 0 0 0); }
+.fold-line > span { display:block; transform:translateY(105%); animation:fold-in .9s var(--ease-premium) both; }
+.fold-line:nth-child(2) > span { animation-delay:.08s; }
+.fold-line:nth-child(3) > span { animation-delay:.16s; }
+.fold-accent { font-family:var(--serif); text-transform:none; font-style:normal; letter-spacing:-.06em; }
+.stack-section { transform-origin:50% 0; box-shadow:0 -22px 70px rgba(0,0,0,.16); }
+.stack-section::after { animation:none; opacity:.12; }
+.wordmark-mark { animation:none; }
+.feature-card { animation:none; }
+.gallery-main::after { animation:none; }
+.menu-button { min-height:50px; padding:12px 16px; gap:12px; border-radius:2px; }
+.menu-button svg { width:27px; height:27px; }
+.glass-button { min-height:54px; padding:16px 20px 16px 25px; border-radius:3px; font-weight:600; box-shadow:0 12px 32px rgba(0,0,0,.16); }
+.glass-button:hover { box-shadow:0 16px 42px rgba(0,0,0,.22); }
+.settings-card small { display:block; color:var(--dawn); font:9px var(--display); letter-spacing:.08em; text-transform:none; margin-top:3px; }
+.settings-card textarea { display:block; width:100%; border:0; border-bottom:1px solid var(--line); padding:12px 0; margin-top:6px; color:var(--champagne); background:transparent; outline:none; font:14px var(--serif); resize:vertical; }
+@keyframes fold-in { from { opacity:0; transform:translateY(105%) rotate(2deg); } to { opacity:1; transform:translateY(0) rotate(0); } }
+@media (prefers-reduced-motion:reduce) { .fold-line > span { animation:none; transform:none; } }
