@@ -134,3 +134,7 @@ p { color:var(--muted); max-width:34rem; }
   .side-menu nav a { font-size:3.3rem; }
   .stack-section { min-height:auto; }
 }
+
+.form-error { width:100%; color:#efb4a9; font-size:12px; margin:10px 0 5px; }
+.admin-top-actions { display:flex; align-items:center; gap:12px; }
+@media (max-width:800px) { .admin-top-actions { flex-wrap:wrap; margin-top:24px; } }
