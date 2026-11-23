@@ -52,6 +52,13 @@ alter table public.admin_users enable row level security;
 alter table public.products enable row level security;
 alter table public.site_settings enable row level security;
 
+grant usage on schema public to anon, authenticated;
+grant select on public.admin_users to authenticated;
+grant select on public.products to anon, authenticated;
+grant insert, update, delete on public.products to authenticated;
+grant select on public.site_settings to anon, authenticated;
+grant insert, update, delete on public.site_settings to authenticated;
+
 drop policy if exists "Public can read products" on public.products;
 create policy "Public can read products" on public.products for select to anon, authenticated using (true);
 
