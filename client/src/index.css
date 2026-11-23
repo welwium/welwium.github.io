@@ -316,3 +316,35 @@ p { color:var(--muted); max-width:34rem; }
   .cta-card p { margin:23px 0; }
   .cta-bottom { margin-top:52px; }
 }
+
+/* Living type and tactile controls: gentle float without layout movement */
+.hero-content h1 .fold-text,
+.intro h2 .fold-text,
+.manifesto h2 .fold-text,
+.cta-copy h2 .fold-text { animation: heading-float 6.8s ease-in-out 1.05s infinite; will-change:transform; }
+.hero .glass-button,
+.intro .glass-button,
+.cta-card .glass-button { animation: button-float 4.8s ease-in-out 1.15s infinite; will-change:transform; }
+.hero .glass-button:hover,
+.intro .glass-button:hover,
+.cta-card .glass-button:hover { animation-play-state:paused; }
+@keyframes heading-float { 0%,100% { transform:translate3d(0,0,0); } 50% { transform:translate3d(0,-6px,0); } }
+@keyframes button-float { 0%,100% { transform:translate3d(0,0,0); } 50% { transform:translate3d(0,-5px,0); } }
+@media (max-width:800px) {
+  .hero-content h1 .fold-text,
+  .intro h2 .fold-text,
+  .manifesto h2 .fold-text,
+  .cta-copy h2 .fold-text { animation-duration:7.8s; }
+  .hero .glass-button,
+  .intro .glass-button,
+  .cta-card .glass-button { animation-duration:5.6s; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .hero-content h1 .fold-text,
+  .intro h2 .fold-text,
+  .manifesto h2 .fold-text,
+  .cta-copy h2 .fold-text,
+  .hero .glass-button,
+  .intro .glass-button,
+  .cta-card .glass-button { animation:none; }
+}
