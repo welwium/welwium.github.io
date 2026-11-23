@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://welwium.com/</loc></url>
-  <url><loc>https://welwium.com/products</loc></url>
-  <url><loc>https://welwium.com/about</loc></url>
-  <url><loc>https://welwium.com/contact</loc></url>
+  <url><loc>https://welwium.github.io/</loc></url>
+  <url><loc>https://welwium.github.io/products</loc></url>
+  <url><loc>https://welwium.github.io/about</loc></url>
+  <url><loc>https://welwium.github.io/contact</loc></url>
+  <url><loc>https://welwium.github.io/privacy</loc></url>
+  <url><loc>https://welwium.github.io/terms</loc></url>
+  <url><loc>https://welwium.github.io/refunds</loc></url>
+  <url><loc>https://welwium.github.io/delivery</loc></url>
 </urlset>

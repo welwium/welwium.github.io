@@ -169,3 +169,85 @@ p { color:var(--muted); max-width:34rem; }
 .stack-cta .home-cta h2 { color:var(--onyx); }
 .stack-cta .home-cta .fold-accent { color:#3a2d20; }
 @media (max-width:800px) { .brand-logo { width:112px; height:44px; } .gate-logo { height:125px; } }
+
+
+/* Final refinement: bounded typography, interactive ferro field, and editorial controls */
+.site-nav { z-index:60; }
+.brand-logo { width:clamp(128px, 15vw, 190px); height:auto; max-height:42px; object-fit:contain; }
+.hero-content { position:relative; z-index:3; width:min(760px, 100%); }
+.hero-content h1,.intro h2,.manifesto h2,.feature-card h2,.cta-inner h2 { max-width:100%; overflow:visible; }
+.hero-content h1 { line-height:.96; margin-right:clamp(0px, 4vw, 60px); }
+.fold-text { max-width:100%; overflow:visible; }
+.fold-line { max-width:100%; line-height:1.05; padding-bottom:.08em; overflow:clip; }
+.fold-line > span { will-change:transform; }
+.hero-ferro { position:absolute; z-index:-1; inset:0; opacity:.7; mix-blend-mode:screen; pointer-events:auto; }
+.ferro-field { --fx:50%; --fy:42%; overflow:hidden; background:radial-gradient(circle at var(--fx) var(--fy), rgba(231,214,183,.28) 0 2%, rgba(215,183,122,.11) 7%, transparent 23%), radial-gradient(circle at calc(100% - var(--fx)) calc(100% - var(--fy)), rgba(230,163,154,.16), transparent 24%); }
+.ferro-field::before,.ferro-field::after,.ferro-core,.ferro-ring,.ferro-grain { content:""; position:absolute; pointer-events:none; border-radius:48% 52% 46% 54%; filter:blur(1px); }
+.ferro-field::before { width:38vw; height:22vw; min-width:260px; min-height:170px; left:calc(var(--fx) - 19vw); top:calc(var(--fy) - 11vw); background:radial-gradient(ellipse at 50% 50%, rgba(231,214,183,.25), rgba(215,183,122,.07) 45%, transparent 72%); transform:rotate(-18deg); transition:left .35s var(--ease-premium),top .35s var(--ease-premium),transform .6s ease; animation:ferro-drift 9s ease-in-out infinite; }
+.ferro-field::after { width:28vw; height:12vw; left:calc(var(--fx) - 14vw); top:calc(var(--fy) - 6vw); border:1px solid rgba(231,214,183,.17); box-shadow:0 0 50px rgba(215,183,122,.12), inset 0 0 28px rgba(230,163,154,.08); transform:rotate(22deg); transition:left .45s var(--ease-premium),top .45s var(--ease-premium); animation:ferro-pulse 6s ease-in-out infinite; }
+.ferro-core { width:11vw; height:5vw; left:calc(var(--fx) - 5.5vw); top:calc(var(--fy) - 2.5vw); background:linear-gradient(90deg,transparent,rgba(255,244,218,.68),transparent); filter:blur(9px); transition:left .2s ease,top .2s ease; }
+.ferro-ring { inset:15% 18%; border:1px solid rgba(230,163,154,.12); transform:rotate(-16deg); animation:ferro-rotate 16s linear infinite; }
+.ferro-grain { inset:0; opacity:.15; background-image:radial-gradient(rgba(255,255,255,.4) .6px, transparent .7px); background-size:7px 7px; mix-blend-mode:soft-light; }
+.stack-cta { background:var(--onyx)!important; color:var(--champagne); }
+.stack-cta .home-cta { position:relative; overflow:hidden; min-height:78vh; background:radial-gradient(circle at 50% 45%, rgba(215,183,122,.13), transparent 22%), linear-gradient(135deg,#101010 0%,#171716 55%,#2b2119 100%); }
+.stack-cta .home-cta > .ferro-field { position:absolute; inset:0; opacity:.58; }
+.stack-cta .cta-inner { position:relative; z-index:2; max-width:min(900px,90vw); }
+.stack-cta .cta-inner h2 { font-size:clamp(4rem,9vw,9rem); }
+.stack-cta .cta-inner .eyebrow { color:var(--dawn); }
+.stack-cta .cta-support { margin:0 auto 30px; color:rgba(231,214,183,.62); }
+.stack-cta .glass-button { color:var(--onyx); background:var(--champagne); border-color:var(--champagne); }
+.cta-orbit { position:absolute; z-index:2; right:8vw; bottom:8vh; color:var(--dawn); font:11px var(--display); letter-spacing:.22em; transform:rotate(90deg); }
+.footer { position:relative; z-index:4; grid-template-columns:1.15fr 1fr; background:#111110; }
+.footer-brand p { line-height:1.8; }
+.footer-location { display:block; margin-top:20px; color:var(--dawn); font:10px var(--display); letter-spacing:.16em; text-transform:uppercase; }
+.footer-links { flex-wrap:wrap; align-content:flex-start; row-gap:16px; }
+.policy-page { min-height:78vh; padding-top:190px; padding-bottom:140px; }
+.policy-page h1 { max-width:900px; margin:28px 0 95px; }
+.policy-layout { display:grid; grid-template-columns:1fr 2fr; gap:8vw; border-top:1px solid var(--line); padding-top:34px; }
+.policy-index { color:var(--dawn); font:11px var(--display); letter-spacing:.18em; text-transform:uppercase; }
+.policy-copy p { max-width:720px; color:var(--champagne); font-size:17px; line-height:1.9; margin:0 0 30px; }
+.policy-updated { display:block; margin-top:70px; color:var(--muted); font:10px var(--display); letter-spacing:.14em; text-transform:uppercase; }
+.gallery-depth { position:relative; width:100%; aspect-ratio:1 / 1.08; min-height:520px; }
+.gallery-depth .gallery-main { position:absolute; inset:0; height:auto; aspect-ratio:1 / 1.08; z-index:3; border:1px solid rgba(231,214,183,.2); box-shadow:0 28px 80px rgba(0,0,0,.35); }
+.depth-back { position:absolute; inset:5% 5% 0; background:#24201b; border:1px solid rgba(231,214,183,.12); transform-origin:bottom center; }
+.depth-back-one { z-index:1; transform:rotate(4deg) translate(22px,12px); opacity:.45; }
+.depth-back-two { z-index:2; transform:rotate(-3deg) translate(-18px,7px); opacity:.7; background:#30271e; }
+.gallery-index { position:absolute; z-index:5; left:22px; bottom:20px; color:var(--champagne); font:10px var(--display); letter-spacing:.15em; }
+.gallery-thumbs button { width:72px; height:72px; flex:0 0 72px; transition:transform .3s ease,opacity .3s ease; }
+.gallery-thumbs button:hover { transform:translateY(-4px); }
+.variant-picker { margin-top:30px; }
+.variant-picker > span { display:block; margin-bottom:12px; color:var(--muted); font:10px var(--display); text-transform:uppercase; letter-spacing:.14em; }
+.variant-picker > div { display:flex; flex-wrap:wrap; gap:8px; }
+.variant-picker button { border:1px solid var(--line); background:transparent; color:var(--muted); padding:10px 12px; font:11px var(--display); }
+.variant-picker button.selected,.variant-picker button:hover { color:var(--onyx); background:var(--champagne); border-color:var(--champagne); }
+.shipping-note { margin-top:17px; color:var(--muted); font-size:11px; }
+.product-editor { padding:34px; margin-bottom:35px; }
+.editor-heading { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:30px; }
+.editor-heading h3 { margin-top:12px; font-size:2.1rem; }
+.editor-grid { display:grid; grid-template-columns:1fr 1fr; gap:0 24px; }
+.editor-grid label { display:block; margin-bottom:24px; color:var(--muted); font:10px var(--display); letter-spacing:.12em; text-transform:uppercase; }
+.editor-grid label small { display:block; color:var(--dawn); font:9px var(--display); text-transform:none; letter-spacing:.06em; margin-top:4px; }
+.editor-grid input,.editor-grid textarea { display:block; width:100%; margin-top:7px; border:0; border-bottom:1px solid var(--line); background:transparent; color:var(--champagne); outline:none; padding:11px 0; font:14px var(--serif); resize:vertical; }
+.editor-grid input:focus,.editor-grid textarea:focus { border-color:var(--champagne-strong); }
+.editor-wide { grid-column:1/-1; }
+.product-editor > .glass-button { margin-top:6px; }
+@keyframes ferro-drift { 0%,100% { transform:rotate(-18deg) scale(1); } 50% { transform:rotate(-10deg) scale(1.06); } }
+@keyframes ferro-pulse { 0%,100% { opacity:.45; transform:rotate(22deg) scale(.94); } 50% { opacity:.9; transform:rotate(28deg) scale(1.06); } }
+@keyframes ferro-rotate { to { transform:rotate(344deg); } }
+@media (max-width:800px) {
+  .brand-logo { width:132px; max-height:34px; }
+  .hero-content h1 { font-size:clamp(3.4rem,15vw,6rem); }
+  .hero-content p { max-width:31rem; }
+  .hero-ferro { opacity:.48; }
+  .stack-cta .home-cta { min-height:690px; }
+  .cta-orbit { right:22px; bottom:32px; }
+  .footer-links { gap:15px 22px; }
+  .policy-page { padding-top:140px; padding-bottom:90px; }
+  .policy-page h1 { margin-bottom:60px; }
+  .policy-layout { display:block; }
+  .policy-copy { margin-top:35px; }
+  .gallery-depth,.gallery-depth .gallery-main { min-height:0; }
+  .editor-grid { display:block; }
+  .product-editor { padding:25px 20px; }
+}
+@media (prefers-reduced-motion:reduce) { .ferro-field::before,.ferro-field::after,.ferro-ring { animation:none; } .hero-ferro { pointer-events:none; } }

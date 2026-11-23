@@ -21,6 +21,10 @@ create table if not exists public.products (
   image_url text not null default '',
   accent text not null default '#D7B77A',
   specs text[] not null default '{}',
+  variants text[] not null default '{}',
+  gallery_urls text[] not null default '{}',
+  sku text not null default '',
+  shipping_note text not null default 'Delivery across Pakistan. Availability confirmed on WhatsApp.',
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
@@ -45,6 +49,20 @@ alter table public.site_settings add column if not exists hero_subheading text n
 alter table public.site_settings add column if not exists philosophy_heading text not null default 'Less noise.|More signal.';
 alter table public.site_settings add column if not exists philosophy_body text not null default 'WELWIUM is a premium technology house from Pakistan, building the things that sit quietly at the centre of a life well lived.';
 alter table public.site_settings add column if not exists cta_heading text not null default 'Find your next|essential.';
+alter table public.products add column if not exists variants text[] not null default '{}';
+alter table public.products add column if not exists gallery_urls text[] not null default '{}';
+alter table public.products add column if not exists sku text not null default '';
+alter table public.products add column if not exists shipping_note text not null default 'Delivery across Pakistan. Availability confirmed on WhatsApp.';
+alter table public.site_settings add column if not exists hero_button_text text not null default 'Explore the system';
+alter table public.site_settings add column if not exists philosophy_button_text text not null default 'Our point of view';
+alter table public.site_settings add column if not exists collection_button_text text not null default 'View the collection';
+alter table public.site_settings add column if not exists cta_button_text text not null default 'View products';
+alter table public.site_settings add column if not exists footer_tagline text not null default 'Intelligent technology, refined.\nDesigned in Pakistan. Made for what’s next.';
+alter table public.site_settings add column if not exists footer_location text not null default 'Pakistan / Worldwide';
+alter table public.site_settings add column if not exists privacy_content text not null default 'WELWIUM respects your privacy. We only use information shared with us to respond to enquiries, process orders, and improve the experience you receive from our studio. We do not sell personal information.';
+alter table public.site_settings add column if not exists terms_content text not null default 'By placing an order with WELWIUM, you agree that product availability, pricing, delivery timing, and payment details will be confirmed directly with our team before fulfilment.';
+alter table public.site_settings add column if not exists refund_content text not null default 'If an eligible item arrives damaged or materially different from the confirmed order, contact WELWIUM within 48 hours with photographs. Our team will review the request and guide the next step.';
+alter table public.site_settings add column if not exists delivery_content text not null default 'We deliver across Pakistan. Delivery timing, charges, and handover details are confirmed for each order through WhatsApp before payment or dispatch.';
 
 insert into public.site_settings (id) values (true) on conflict (id) do nothing;
 
@@ -82,9 +100,9 @@ insert into public.admin_users (id, email)
 select id, email from auth.users where email = 'welwium@gmail.com'
 on conflict (id) do update set email = excluded.email;
 
-insert into public.products (slug, name, category, eyebrow, description, detail, price, image_url, accent, specs)
+insert into public.products (slug, name, category, eyebrow, description, detail, price, image_url, accent, specs, variants, gallery_urls)
 values
-('aura','AURA / 01','Ambient intelligence','The quiet signal','A calm, always-ready interface for the spaces you inhabit.','AURA / 01 is the first ambient intelligence object: responsive, unobtrusive, and tuned to the rhythm of your day.','PKR 48,500','/assets/welwium-aura.webp','#D7B77A',array['Ambient field sensing','Onyx glass enclosure','USB-C / wireless ready']),
+('aura','AURA / 01','Ambient intelligence','The quiet signal','A calm, always-ready interface for the spaces you inhabit.','AURA / 01 is the first ambient intelligence object: responsive, unobtrusive, and tuned to the rhythm of your day.','PKR 48,500','/assets/welwium-aura.webp','#D7B77A',array['Ambient field sensing','Onyx glass enclosure','USB-C / wireless ready'],array['Champagne / 128 GB','Onyx / 256 GB'],array['/assets/welwium-aura.webp','/assets/welwium-hero.webp']),
 ('orbit','ORBIT / 02','Personal systems','Your next essential','A wearable thought companion designed around your attention.','ORBIT / 02 imagines a more intentional relationship with technology — precise, tactile, and personal.','PKR 62,000','/assets/welwium-orbit.webp','#E6A39A',array['Adaptive haptics','Titanium champagne shell','7-day concept battery']),
 ('veil','VEIL / 03','Portable intelligence','Clarity, carried','A tactile screen concept for work that moves with you.','VEIL / 03 imagines a thinner, quieter kind of portable computing.','PKR 118,000','/assets/welwium-veil.webp','#D7B77A',array['Edge-to-edge glass','Focus mode interface','Studio-grade display']),
 ('node','NODE / 04','Home intelligence','A softer centre','The understated centre of a more considered home.','NODE / 04 makes connected living feel less connected to a screen and more connected to you.','PKR 39,000','/assets/welwium-node.webp','#E6A39A',array['Multi-room awareness','Local-first controls','Silent dawn indicator']),
